@@ -16,3 +16,8 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.nav-link:hover, .nav-link:focus {
+  color: #4333f3;
+  border-bottom: 2px solid #4333f3;
+}

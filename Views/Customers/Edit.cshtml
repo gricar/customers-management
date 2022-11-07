@@ -1,0 +1,115 @@
+@model CustomersManagement.Models.Customer
+
+@{
+    ViewData["Title"] = "Editar";
+}
+
+<h2>@ViewData["Title"]</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Cpf" class="control-label"></label>
+                <input asp-for="Cpf" class="form-control" />
+                <span asp-validation-for="Cpf" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Birthday" class="control-label"></label>
+                <input asp-for="Birthday" class="form-control" />
+                <span asp-validation-for="Birthday" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Genre" class="control-label"></label>
+                <input asp-for="Genre" type="radio" id="masculino" name="genre" value="Masculino">
+                <label asp-for="Genre" for="masculino">Masculino</label><br>
+                <input asp-for="Genre" type="radio" id="feminino" name="genre" value="Feminino">
+                <label asp-for="Genre" for="feminino">Feminino</label><br>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cep" class="control-label"></label>
+                <input asp-for="Cep" class="form-control" onblur="pesquisacep(this.value);" />
+                <span asp-validation-for="Cep" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" id="address" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="State" class="control-label"></label>
+                <input asp-for="State" class="form-control" id="state" />
+                <span asp-validation-for="State" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="City" class="control-label"></label>
+                <input asp-for="City" class="form-control" id="city" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Salvar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Retornar a lista de clientes</a>
+</div>
+
+@section Scripts {
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script>
+    function clear_cep_form() {
+        document.getElementById('address').value = ("");
+        document.getElementById('city').value = ("");
+        document.getElementById('state').value = ("");
+    }
+
+    function get_content(conteudo) {
+        if (!("erro" in conteudo)) {
+            document.getElementById('address').value = (conteudo.logradouro);
+            document.getElementById('city').value = (conteudo.localidade);
+            document.getElementById('state').value = (conteudo.uf);
+        }
+        else {
+            clear_cep_form();
+            alert("CEP não encontrado.");
+        }
+    }
+
+    function pesquisacep(valor) {
+        var cep = valor.replace(/\D/g, '');
+
+        if (cep != "") {
+
+            var validacep = /^[0-9]{8}$/;
+
+            if (validacep.test(cep)) {
+                var script = document.createElement('script');
+
+                script.src = 'https://viacep.com.br/ws/' + cep + '/json/?callback=get_content';
+
+                document.body.appendChild(script);
+            }
+            else {
+                clear_cep_form();
+                alert("Formato de CEP inválido.");
+            }
+        }
+        else {
+            clear_cep_form();
+        }
+    };
+
+</script>
